@@ -20,9 +20,13 @@ const callback = (response) => {
   // the whole response has been recieved, so we just print it out here
   response.on('end', () => {
     const $ = cheerio.load(str)
+    let theText
 
-    //console.log($('.findList').attr('id', 'Titles').html())
-    let theText = $('.result_text').text()
+    $('.findList').each((i, elem) => {
+      theText += `how many times ${$('.result_text', elem).text()}`
+      return false
+    })
+
     $('.result_text').children('small').each((ind, elem) => {
       theText = theText.replace($(elem).text(), '')
     })
