@@ -20,13 +20,11 @@ const callback = (response) => {
   // the whole response has been recieved, so we just print it out here
   response.on('end', () => {
     const $ = cheerio.load(str)
-    let theText
-
+    let theText = ''
     $('.findList').each((i, elem) => {
-      theText += `how many times ${$('.result_text', elem).text()}`
+      theText += $('.result_text', elem).text()
       return false
     })
-
     $('.result_text').children('small').each((ind, elem) => {
       theText = theText.replace($(elem).text(), '')
     })
@@ -43,5 +41,6 @@ http.request(options, callback).end()
 */
 const insertBreaks = (movieTitlesString) => {
   const betweenEach = /\)\s+([^(\s])/g
-  return movieTitlesString.replace(betweenEach, ')\n$1')
+  const removeAkas = /aka ".+"\s*/g
+  return movieTitlesString.replace(betweenEach, ')\n$1').replace(removeAkas, '')
 }
