@@ -2,6 +2,7 @@
 
 const http = require('http');
 const cheerio = require('cheerio');
+const insertBreaks = require('./insertBreaks');
 
 const searchTerm = process.argv.slice(2).join(' ').toLowerCase().trim()
   .replace(/[^\w\s\d]/g, '') // Remove any special characters
@@ -9,18 +10,7 @@ const searchTerm = process.argv.slice(2).join(' ').toLowerCase().trim()
 
 const searchUrl = `http://www.imdb.com/find?ref_=nv_sr_fn&q=${searchTerm}&s=all`;
 
-/**
-* Inserts line breaks between each film and removes any alternate titles
-* @param {string} movieTitlesString
-* @returns {string}
-*/
-const insertBreaks = (movieTitlesString) => {
-  const betweenEach = /\)\s+([^(\s])/g;
-  const removeAkas = /aka ".+"\s*/g;
-  return movieTitlesString.replace(betweenEach, ')\n$1').replace(removeAkas, '');
-};
-
-const printMovies = (response) => {
+http.request(searchUrl, (response) => {
   let str = '';
 
   // another chunk of data has been recieved, so append it to `str`
@@ -45,14 +35,4 @@ const printMovies = (response) => {
     });
     console.log(insertBreaks(theText).trim());
   });
-};
-
-
-http.request(searchUrl, printMovies).end();
-
-/* tangentially related question:
-* how do you run the program with the
-* optional arguments referred to by
-* process.argv0 (distinct from process.argv[0])
-*/
-// console.log(`special argv0: ${process.argv0} \n0:${process.argv[0]} \n1: ${process.argv[1]}`)
+}).end();
