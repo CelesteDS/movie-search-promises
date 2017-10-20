@@ -1,4 +1,4 @@
-##Search imdb for movies by title:
+## Search imdb for movies by title:
 
 `./movie-search <Movie Title>`
 
